@@ -42,7 +42,12 @@ class CaptureAPI(object):
         self.session.close()
 
     def _send_request(self, method, path, files=None, timeout=10, stream=False):
-        url = urljoin(self.server, self.base_path + path)
+#        url = urljoin(self.server, self.base_path + path)
+        # Commented above urljoin line and instead joined it manually.
+        # Using urljoin would result in passing a url that only includes the URI
+        # and results in a MissingSchema exception.
+        # The new url string below works.
+        url = "https://" + self.server + self.base_path + path
         resp = self.session.request(
             method, url, files=files, timeout=timeout, stream=stream)
         if resp.headers["Content-Type"] == "application/json":
